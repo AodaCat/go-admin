@@ -1,0 +1,7 @@
+tmp
+.vscode
+.idea
+*/.DS_Store
+
+main
+go-amain
