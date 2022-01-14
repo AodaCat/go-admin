@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"go-admin/core"
+	"go-admin/global"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,6 +15,10 @@ import (
 )
 
 func main() {
+
+	global.GA_VP = core.Viper()
+	global.GA_LOG = core.Zap()
+
 	fmt.Println("go admin init")
 	router := gin.Default()
 	router.GET("/hello", func(c *gin.Context) {
