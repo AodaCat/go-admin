@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"go-admin/core"
 	"go-admin/global"
 	"net/http"
@@ -12,14 +11,16 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func main() {
 
 	global.GA_VP = core.Viper()
 	global.GA_LOG = core.Zap()
+	global.GA_LOG.Info("zap logger init...")
 
-	fmt.Println("go admin init")
+	global.GA_LOG.Info("go admin init")
 	router := gin.Default()
 	router.GET("/hello", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -37,17 +38,17 @@ func main() {
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			fmt.Println("[GIN]Starting err:", err)
+			global.GA_LOG.Error("[GIN]Starting err:", zap.Error(err))
 		}
 	}()
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	fmt.Println("[GIN]Shutting down server...")
+	global.GA_LOG.Info("[GIN]Shutting down server...")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		fmt.Println("[GIN]Forced to shutdown err:", err)
+		global.GA_LOG.Error("[GIN]Forced to shutdown err:", zap.Error(err))
 	}
-	fmt.Println("[GIN]Has been shutdown")
+	global.GA_LOG.Info("[GIN]Has been shutdown")
 }
