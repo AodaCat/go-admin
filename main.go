@@ -20,6 +20,7 @@ func main() {
 	global.GA_VP = core.Viper()
 	global.GA_LOG = core.Zap()
 	global.GA_DB = initialize.Gorm()
+	initialize.Timer()
 
 	global.GA_LOG.Info("go admin init")
 	router := gin.Default()

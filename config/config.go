@@ -11,4 +11,6 @@ type Server struct {
 	Mysql  Mysql `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
 	Pgsql  Pgsql `mapstructure:"pgsql" json:"pgsql" yaml:"pgsql"`
 	DBList []DB  `mapstructure:"db-list" json:"db-list" yaml:"db-list"`
+
+	Timer Timer `mapstructure:"timer" json:"timer" yaml:"timer"`
 }

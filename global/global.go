@@ -2,6 +2,7 @@ package global
 
 import (
 	"go-admin/config"
+	"go-admin/util/timer"
 	"sync"
 
 	"github.com/go-redis/redis"
@@ -18,6 +19,7 @@ var (
 	GA_DB_LIST map[string]*gorm.DB
 	GA_REDIS   *redis.Client
 	GA_LOG     *zap.Logger
+	GA_Timer   timer.Timer = timer.NewTimerTask()
 	BlackCache local_cache.Cache
 	lock       sync.RWMutex
 )
