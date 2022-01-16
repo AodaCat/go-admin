@@ -4,6 +4,7 @@ import (
 	"context"
 	"go-admin/core"
 	"go-admin/global"
+	"go-admin/initialize"
 	"net/http"
 	"os"
 	"os/signal"
@@ -18,7 +19,7 @@ func main() {
 
 	global.GA_VP = core.Viper()
 	global.GA_LOG = core.Zap()
-	global.GA_LOG.Info("zap logger init...")
+	global.GA_DB = initialize.Gorm()
 
 	global.GA_LOG.Info("go admin init")
 	router := gin.Default()
