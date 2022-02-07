@@ -21,10 +21,17 @@ func main() {
 	global.GA_LOG = core.Zap()
 	global.GA_DB = initialize.Gorm()
 	initialize.Timer()
+	initialize.DBList()
+	if global.GA_DB != nil {
+		initialize.RegisterTables(global.GA_DB)
+		// 程序结束前关闭数据库链接
+		db, _ := global.GA_DB.DB()
+		defer db.Close()
+	}
 
 	global.GA_LOG.Info("go admin init")
 	router := gin.Default()
-	router.GET("/hello", func(c *gin.Context) {
+	router.GET("/api/hello", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Hello world!",
 		})
@@ -33,7 +40,7 @@ func main() {
 		c.Writer.WriteString("<h1 style='font-size:250'>💩</h1>")
 	})
 	srv := &http.Server{
-		Addr:         ":9001",
+		Addr:         ":9101",
 		Handler:      router,
 		ReadTimeout:  60 * time.Second,
 		WriteTimeout: 60 * time.Second,

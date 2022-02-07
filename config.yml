@@ -11,12 +11,12 @@ zap:
 
 # mysql connect configuration
 mysql:
-  path: ''
-  port: ''
+  path: 'test-mysql.adcat.cc'
+  port: '3306'
   config: ''
-  db-name: ''
-  username: ''
-  password: ''
+  db-name: 'go_admin'
+  username: 'test_sh'
+  password: 'test!1234'
   max-idle-conns: 10
   max-open-conns: 100
   log-mode: ""
