@@ -5,7 +5,7 @@ import (
 	"go-admin/util/timer"
 	"sync"
 
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 	"github.com/songzhibin97/gkit/cache/local_cache"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"

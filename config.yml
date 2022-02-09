@@ -52,3 +52,13 @@ db-list: [
     log-zap: false,
   }
 ]
+
+# system config
+system:
+  env: 'public'
+  addr: 9101
+  db-type: 'mysql'
+  oss-type: 'local'
+  use-multipoint: false
+  iplimit-count: 15000
+  iplimit-time: 3600
