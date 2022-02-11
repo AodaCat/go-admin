@@ -7,6 +7,7 @@ type Server struct {
 	Zap      Zap      `mapstructure:"zap" json:"zap" yaml:"zap"`
 	Redis    Redis    `mapstructure:"redis" json:"redis" yaml:"redis"`
 	System   System   `mapstructure:"system" json:"system" yaml:"system"`
+	Casbin   Casbin   `mapstructure:"casbin" json:"casbin" yaml:"casbin"`
 
 	// gorm
 	Mysql  Mysql `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
@@ -14,4 +15,7 @@ type Server struct {
 	DBList []DB  `mapstructure:"db-list" json:"db-list" yaml:"db-list"`
 
 	Timer Timer `mapstructure:"timer" json:"timer" yaml:"timer"`
+
+	//oss
+	Local Local `mapstructure:"local" json:"local" yaml:"local"`
 }

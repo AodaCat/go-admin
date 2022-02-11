@@ -53,12 +53,27 @@ db-list: [
   }
 ]
 
+# local configuration
+local:
+  path: 'uploads/file'
+
+# casbin configuration
+casbin:
+  model-path: './resource/rbac_model.conf'
+
 # system config
 system:
-  env: 'public'
+  env: 'develop' # Change to "develop" to skip authentication for development mode
   addr: 9101
   db-type: 'mysql'
   oss-type: 'local'
   use-multipoint: false
   iplimit-count: 15000
   iplimit-time: 3600
+
+# jwt configuration
+jwt:
+  signing-key: 'adcat'
+  expires-time: 57600
+  buffer-time: 3600
+  issuer: 'adcat'
