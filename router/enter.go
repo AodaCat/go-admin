@@ -1,14 +1,23 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"go-admin/router/autocode"
+	"go-admin/router/example"
+	"go-admin/router/system"
 
-type RouterGroup struct {
+	"github.com/gin-gonic/gin"
+)
+
+type Group struct {
+	System   system.Group
+	Example  example.Group
+	Autocode autocode.Group
 }
 
-func PublicRouter(*gin.RouterGroup) {
+var RouterApp = new(Group)
 
-}
-
-func PrivateRouter(*gin.RouterGroup) {
-
+func (g *Group) RegisterRouter(public *gin.RouterGroup, private *gin.RouterGroup) {
+	g.System.RegisterRouter(public, private)
+	g.Example.RegisterRouter(public, private)
+	g.Autocode.RegisterRouter(public, private)
 }

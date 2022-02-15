@@ -28,7 +28,6 @@ func Routers() *gin.Engine {
 	// 获取路由组实例
 	// 开放路由
 	publicGroup := router.Group("/api")
-	routerGroup.PublicRouter(publicGroup)
 	{
 		// 健康监测
 		publicGroup.GET("/health", func(c *gin.Context) {
@@ -38,7 +37,7 @@ func Routers() *gin.Engine {
 	// 鉴权
 	privateGroup := router.Group("/api")
 	privateGroup.Use(middleware.JWTAuth).Use(middleware.Casbin)
-	routerGroup.PublicRouter(privateGroup)
+	routerGroup.RouterApp.RegisterRouter(publicGroup, privateGroup)
 
 	// .Use(middleware.CasbinHandler())
 	// 安装插件

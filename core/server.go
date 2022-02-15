@@ -33,7 +33,7 @@ func RunServer() {
 	fmt.Printf(`
 	欢迎使用 https://github.com/AodaCat/go-admin
 	当前版本:v0.0.1
-	默认自动化文档地址:http://127.0.0.1%s/swagger/index.html`,
+	默认自动化文档地址:http://127.0.0.1%s/api/swagger/index.html`,
 		address)
 	err := s.ListenAndServe()
 	if err != nil {
