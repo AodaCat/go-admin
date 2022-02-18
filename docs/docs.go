@@ -16,7 +16,7 @@ const docTemplate_swagger = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/createApi": {
+        "/api/api/createApi": {
             "post": {
                 "security": [
                     {
@@ -62,9 +62,235 @@ const docTemplate_swagger = `{
                     }
                 }
             }
+        },
+        "/api/base/captcha": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Base"
+                ],
+                "summary": "生成验证码",
+                "responses": {
+                    "200": {
+                        "description": "生成验证码,返回包括随机数id,base64,验证码长度",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.SysCaptchaResponse"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/base/login": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Base"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "用户名, 密码, 验证码",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回包括用户信息,token,过期时间",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.LoginResponse"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/init/checkdb": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CheckDB"
+                ],
+                "summary": "初始化用户数据库",
+                "responses": {
+                    "200": {
+                        "description": "初始化用户数据库",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/init/initdb": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "InitDB"
+                ],
+                "summary": "初始化用户数据库",
+                "parameters": [
+                    {
+                        "description": "初始化数据库参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.InitDB"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "初始化用户数据库",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "request.InitDB": {
+            "type": "object",
+            "required": [
+                "dbName",
+                "userName"
+            ],
+            "properties": {
+                "dbName": {
+                    "type": "string"
+                },
+                "dbType": {
+                    "type": "string"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.Login": {
+            "type": "object",
+            "properties": {
+                "captcha": {
+                    "description": "验证码",
+                    "type": "string"
+                },
+                "captchaId": {
+                    "description": "验证码ID",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "response.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "expiresAt": {
+                    "type": "integer"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/system.SysUser"
+                }
+            }
+        },
         "response.Response": {
             "type": "object",
             "properties": {
@@ -73,6 +299,20 @@ const docTemplate_swagger = `{
                 },
                 "data": {},
                 "msg": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.SysCaptchaResponse": {
+            "type": "object",
+            "properties": {
+                "captchaId": {
+                    "type": "string"
+                },
+                "captchaLength": {
+                    "type": "integer"
+                },
+                "picPath": {
                     "type": "string"
                 }
             }
@@ -106,6 +346,225 @@ const docTemplate_swagger = `{
                 },
                 "updatedAt": {
                     "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "system.SysAuthority": {
+            "type": "object",
+            "properties": {
+                "authorityId": {
+                    "description": "角色ID",
+                    "type": "string"
+                },
+                "authorityName": {
+                    "description": "角色名",
+                    "type": "string"
+                },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.SysAuthority"
+                    }
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "dataAuthorityId": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.SysAuthority"
+                    }
+                },
+                "defaultRouter": {
+                    "description": "默认菜单(默认dashboard)",
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "menus": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.SysBaseMenu"
+                    }
+                },
+                "parentId": {
+                    "description": "父角色ID",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "system.SysBaseMenu": {
+            "type": "object",
+            "properties": {
+                "authoritys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.SysAuthority"
+                    }
+                },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.SysBaseMenu"
+                    }
+                },
+                "closeTab": {
+                    "description": "自动关闭tab",
+                    "type": "boolean"
+                },
+                "component": {
+                    "description": "对应前端文件路径",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "defaultMenu": {
+                    "description": "是否是基础路由（开发中）",
+                    "type": "boolean"
+                },
+                "hidden": {
+                    "description": "是否在列表隐藏",
+                    "type": "boolean"
+                },
+                "icon": {
+                    "description": "菜单图标",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
+                "keepAlive": {
+                    "description": "是否缓存",
+                    "type": "boolean"
+                },
+                "name": {
+                    "description": "路由name",
+                    "type": "string"
+                },
+                "parameters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.SysBaseMenuParameter"
+                    }
+                },
+                "parentId": {
+                    "description": "父菜单ID",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "路由path",
+                    "type": "string"
+                },
+                "sort": {
+                    "description": "排序标记",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "菜单名",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "system.SysBaseMenuParameter": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
+                "key": {
+                    "description": "地址栏携带参数的key",
+                    "type": "string"
+                },
+                "sysBaseMenuID": {
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "地址栏携带参数为params还是query",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "value": {
+                    "description": "地址栏携带参数的值",
+                    "type": "string"
+                }
+            }
+        },
+        "system.SysUser": {
+            "type": "object",
+            "properties": {
+                "activeColor": {
+                    "description": "活跃颜色",
+                    "type": "string"
+                },
+                "authorities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.SysAuthority"
+                    }
+                },
+                "authority": {
+                    "$ref": "#/definitions/system.SysAuthority"
+                },
+                "authorityId": {
+                    "description": "用户角色ID",
+                    "type": "string"
+                },
+                "baseColor": {
+                    "description": "基础颜色",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "headerImg": {
+                    "description": "用户头像",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
+                "nickName": {
+                    "description": "用户昵称",
+                    "type": "string"
+                },
+                "sideMode": {
+                    "description": "用户侧边主题",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "userName": {
+                    "description": "用户登录名",
+                    "type": "string"
+                },
+                "uuid": {
+                    "description": "用户UUID",
                     "type": "string"
                 }
             }

@@ -77,3 +77,9 @@ jwt:
   expires-time: 57600
   buffer-time: 3600
   issuer: 'adcat'
+
+# captcha configuration
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80

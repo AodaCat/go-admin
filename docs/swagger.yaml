@@ -1,10 +1,61 @@
 definitions:
+  request.InitDB:
+    properties:
+      dbName:
+        type: string
+      dbType:
+        type: string
+      host:
+        type: string
+      password:
+        type: string
+      port:
+        type: string
+      userName:
+        type: string
+    required:
+    - dbName
+    - userName
+    type: object
+  request.Login:
+    properties:
+      captcha:
+        description: 验证码
+        type: string
+      captchaId:
+        description: 验证码ID
+        type: string
+      password:
+        description: 密码
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+  response.LoginResponse:
+    properties:
+      expiresAt:
+        type: integer
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/system.SysUser'
+    type: object
   response.Response:
     properties:
       code:
         type: integer
       data: {}
       msg:
+        type: string
+    type: object
+  response.SysCaptchaResponse:
+    properties:
+      captchaId:
+        type: string
+      captchaLength:
+        type: integer
+      picPath:
         type: string
     type: object
   system.SysApi:
@@ -31,10 +82,167 @@ definitions:
         description: 更新时间
         type: string
     type: object
+  system.SysAuthority:
+    properties:
+      authorityId:
+        description: 角色ID
+        type: string
+      authorityName:
+        description: 角色名
+        type: string
+      children:
+        items:
+          $ref: '#/definitions/system.SysAuthority'
+        type: array
+      createdAt:
+        description: 创建时间
+        type: string
+      dataAuthorityId:
+        items:
+          $ref: '#/definitions/system.SysAuthority'
+        type: array
+      defaultRouter:
+        description: 默认菜单(默认dashboard)
+        type: string
+      deletedAt:
+        type: string
+      menus:
+        items:
+          $ref: '#/definitions/system.SysBaseMenu'
+        type: array
+      parentId:
+        description: 父角色ID
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+    type: object
+  system.SysBaseMenu:
+    properties:
+      authoritys:
+        items:
+          $ref: '#/definitions/system.SysAuthority'
+        type: array
+      children:
+        items:
+          $ref: '#/definitions/system.SysBaseMenu'
+        type: array
+      closeTab:
+        description: 自动关闭tab
+        type: boolean
+      component:
+        description: 对应前端文件路径
+        type: string
+      createdAt:
+        description: 创建时间
+        type: string
+      defaultMenu:
+        description: 是否是基础路由（开发中）
+        type: boolean
+      hidden:
+        description: 是否在列表隐藏
+        type: boolean
+      icon:
+        description: 菜单图标
+        type: string
+      id:
+        description: 主键ID
+        type: integer
+      keepAlive:
+        description: 是否缓存
+        type: boolean
+      name:
+        description: 路由name
+        type: string
+      parameters:
+        items:
+          $ref: '#/definitions/system.SysBaseMenuParameter'
+        type: array
+      parentId:
+        description: 父菜单ID
+        type: string
+      path:
+        description: 路由path
+        type: string
+      sort:
+        description: 排序标记
+        type: integer
+      title:
+        description: 菜单名
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+    type: object
+  system.SysBaseMenuParameter:
+    properties:
+      createdAt:
+        description: 创建时间
+        type: string
+      id:
+        description: 主键ID
+        type: integer
+      key:
+        description: 地址栏携带参数的key
+        type: string
+      sysBaseMenuID:
+        type: integer
+      type:
+        description: 地址栏携带参数为params还是query
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+      value:
+        description: 地址栏携带参数的值
+        type: string
+    type: object
+  system.SysUser:
+    properties:
+      activeColor:
+        description: 活跃颜色
+        type: string
+      authorities:
+        items:
+          $ref: '#/definitions/system.SysAuthority'
+        type: array
+      authority:
+        $ref: '#/definitions/system.SysAuthority'
+      authorityId:
+        description: 用户角色ID
+        type: string
+      baseColor:
+        description: 基础颜色
+        type: string
+      createdAt:
+        description: 创建时间
+        type: string
+      headerImg:
+        description: 用户头像
+        type: string
+      id:
+        description: 主键ID
+        type: integer
+      nickName:
+        description: 用户昵称
+        type: string
+      sideMode:
+        description: 用户侧边主题
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+      userName:
+        description: 用户登录名
+        type: string
+      uuid:
+        description: 用户UUID
+        type: string
+    type: object
 info:
   contact: {}
 paths:
-  /api/createApi:
+  /api/api/createApi:
     post:
       consumes:
       - application/json
@@ -60,4 +268,97 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 创建基础api
+  /api/base/captcha:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 生成验证码,返回包括随机数id,base64,验证码长度
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SysCaptchaResponse'
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 生成验证码
+      tags:
+      - Base
+  /api/base/login:
+    post:
+      parameters:
+      - description: 用户名, 密码, 验证码
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回包括用户信息,token,过期时间
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.LoginResponse'
+                msg:
+                  type: string
+              type: object
+      summary: 用户登录
+      tags:
+      - Base
+  /api/init/checkdb:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 初始化用户数据库
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  additionalProperties: true
+                  type: object
+                msg:
+                  type: string
+              type: object
+      summary: 初始化用户数据库
+      tags:
+      - CheckDB
+  /api/init/initdb:
+    post:
+      parameters:
+      - description: 初始化数据库参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.InitDB'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 初始化用户数据库
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 初始化用户数据库
+      tags:
+      - InitDB
 swagger: "2.0"

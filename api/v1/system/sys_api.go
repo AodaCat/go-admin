@@ -15,7 +15,7 @@ type SystemApiApi struct{}
 // @Produce application/json
 // @Param data body system.SysApi true "api路径, api中文描述, api组, 方法"
 // @Success 200 {object} response.Response{msg=string} "创建基础api"
-// @Router /api/createApi [post]
+// @Router /api/api/createApi [post]
 func (s *SystemApiApi) CreateApi(c *gin.Context) {
 	response.OkWithMessage("创建成功", c)
 }

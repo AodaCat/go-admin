@@ -8,6 +8,7 @@ type Server struct {
 	Redis    Redis    `mapstructure:"redis" json:"redis" yaml:"redis"`
 	System   System   `mapstructure:"system" json:"system" yaml:"system"`
 	Casbin   Casbin   `mapstructure:"casbin" json:"casbin" yaml:"casbin"`
+	Captcha  Captcha  `mapstructure:"captcha" json:"captcha" yaml:"captcha"`
 
 	// gorm
 	Mysql  Mysql `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
