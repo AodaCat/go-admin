@@ -11,7 +11,6 @@ import (
 	"go-admin/util"
 	"path/filepath"
 
-	uuid "github.com/satori/go.uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -23,7 +22,7 @@ func (*InitDBService) writeMysqlConfig(mysql config.Mysql) error {
 	for k, v := range cs {
 		global.GA_VP.Set(k, v)
 	}
-	global.GA_VP.Set("jwt.signing-key", uuid.NewV4().String())
+	// global.GA_VP.Set("jwt.signing-key", uuid.NewV4().String())
 	return global.GA_VP.WriteConfig()
 }
 
