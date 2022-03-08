@@ -10,17 +10,17 @@ type ApiRouter struct{}
 
 func (*ApiRouter) InitApiRouter(public *gin.RouterGroup, private *gin.RouterGroup) {
 	// public.Use(middleware.OperationRecord())
-	privateRecord := private.Group("api")
+	apiPrivate := private.Group("api")
 	apiRouterApi := v1.ApiGroupApp.SystemApiGroup.SystemApiApi
 	{
-		privateRecord.POST("createApi", apiRouterApi.CreateApi)               // 创建Api
-		privateRecord.POST("deleteApi", apiRouterApi.DeleteApi)               // 删除Api
-		privateRecord.POST("getApiById", apiRouterApi.GetApiById)             // 获取单条Api消息
-		privateRecord.POST("updateApi", apiRouterApi.UpdateApi)               // 更新api
-		privateRecord.DELETE("deleteApisByIds", apiRouterApi.DeleteApisByIds) // 删除选中api
+		apiPrivate.POST("createApi", apiRouterApi.CreateApi)               // 创建Api
+		apiPrivate.POST("deleteApi", apiRouterApi.DeleteApi)               // 删除Api
+		apiPrivate.POST("getApiById", apiRouterApi.GetApiById)             // 获取单条Api消息
+		apiPrivate.POST("updateApi", apiRouterApi.UpdateApi)               // 更新api
+		apiPrivate.DELETE("deleteApisByIds", apiRouterApi.DeleteApisByIds) // 删除选中api
 	}
 	{
-		private.POST("getAllApis", apiRouterApi.GetAllApis) // 获取所有api
-		private.POST("getApiList", apiRouterApi.GetApiList) // 获取Api列表
+		apiPrivate.POST("getAllApis", apiRouterApi.GetAllApis) // 获取所有api
+		apiPrivate.POST("getApiList", apiRouterApi.GetApiList) // 获取Api列表
 	}
 }

@@ -13,15 +13,15 @@ type UserService struct{}
 //@function: Login
 //@description: 用户登录
 //@param: u *model.SysUser
-//@return: err error, userInter *model.SysUser
+//@return: userInter *model.SysUser, err error
 
-func (userService *UserService) Login(u *system.SysUser) (err error, userInter *system.SysUser) {
+func (userService *UserService) Login(u *system.SysUser) (userInter *system.SysUser, err error) {
 	if nil == global.GA_DB {
-		return fmt.Errorf("db not init"), nil
+		return nil, fmt.Errorf("db not init")
 	}
 
 	var user system.SysUser
 	u.Password = util.MD5V([]byte(u.Password))
 	err = global.GA_DB.Where("username = ? AND password = ?", u.Username, u.Password).Preload("Authorities").Preload("Authority").First(&user).Error
-	return err, &user
+	return &user, err
 }

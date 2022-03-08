@@ -5,4 +5,5 @@ type Group struct {
 	CasbinService
 	InitDBService
 	UserService
+	MenuService
 }
